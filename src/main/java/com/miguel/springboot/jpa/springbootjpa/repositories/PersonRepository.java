@@ -6,12 +6,37 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
+import com.miguel.springboot.jpa.springbootjpa.dto.PersonDto;
 import com.miguel.springboot.jpa.springbootjpa.entities.Person;
 
 public interface PersonRepository extends CrudRepository<Person, Long>{
     
+    @Query("select upper(p.name || ' ' || p.lastname) from Person p")
+    List<String> findAllFullNameConcatUpper();
+
+    @Query("select lower(p.name || ' ' || p.lastname) from Person p")
+    List<String> findAllFullNameConcatLower();
+
+    @Query("select (p.name || ' ' || p.lastname) from Person p")
+    List<String> findAllFullNameConcat();   
+
+    @Query("select count (distinct(p.programmingLanguage)) from Person p")
+    Long findAllProgrammingLanguageDistinctCount();
+
+    @Query("select distinct(p.programmingLanguage) from Person p")
+    List<String> findAllProgrammingLanguageDistinct();
+
+    @Query("select p.name from Person p")
+    List<String> findAllNames();
+
+    @Query("select distinct(p.name) from Person p")
+    List<String> findAllNamesDistinct();
+
+    @Query("select new com.miguel.springboot.jpa.springbootjpa.dto.PersonDto(p.name, p.lastname) from Person p")
+    List<PersonDto> findAllPersonDto();
+
     @Query("select new Person(p.name, p.lastname) from Person p")
-    List<Person> findAllObjectPersonalizedPerson();
+    List<Person> findAllObjectPersonPersonalized();
 
     @Query("select p.name from Person p where p.id=?1")
     String getNameById(Long id);
